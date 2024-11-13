@@ -13,7 +13,7 @@ RUN go mod download
 
 #전체 소스 파일을 /app으로 복사하고 최적화된 바이너리 생성
 COPY . .
-RUN go build -trimmpath -ldflags="-w -s" -o app
+RUN go build -trimpath -ldflags="-w -s" -o app
 
 # 최종 배포 단계 : 실제 운영 환경에서 실행될 최소한의 이미지 생성
 #경량화된 Degian 이미지 사용
