@@ -22,7 +22,7 @@ func TestServer_Run(t *testing.T) {
 	eg, ctx := errgroup.WithContext(ctx)
 
 	mux := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Hello, %s", r.URL.Path[1:])
+		fmt.Fprintf(w, "Hello, %s!", r.URL.Path[1:])
 	})
 
 	eg.Go(func() error {
