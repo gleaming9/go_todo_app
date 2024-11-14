@@ -8,15 +8,15 @@ services:
     build:
         #빌드할 파일들이 있는 위치를 지정 : .. <- 한칸 위 폴더에 go.mod 위치
         #go_todo_app 폴더를 컨텍스트로 설정
-        context: ..
-        dockerfile: _chapter15/Dockerfile
+        context: .
+        dockerfile: Dockerfile
         # target=dev로 설정하여 Dockerfile의 dev stage를 빌드
         args:
           target: dev
 
     # 로컬 컴퓨터의 파일과 컨테이너 안의 파일을 연결, 코드 수정 시 바로 컨테이너에 반영
     volumes:
-      - ../:/app # go_todo_app 루트 디렉터리를 컨테이너의 /app에 마운트
+      - .:/app # go_todo_app 루트 디렉터리를 컨테이너의 /app에 마운트
 
     # 컨테이너가 사용할 포트를 지정
     ports:

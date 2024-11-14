@@ -40,3 +40,4 @@ RUN go install github.com/air-verse/air@latest
 #개발 서버 자동 시작
 CMD ["air"]
 
+## docker-compose down -v <= 실행중인 컨테이너를 멈추고 매핑된 볼륨들을 제거
