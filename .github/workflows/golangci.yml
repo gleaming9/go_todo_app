@@ -1,0 +1,34 @@
+# 워크플로우 트리거 조건 설정
+on:
+
+  pull_request:
+    paths:
+      - "**.go"
+      - .github/workflows/golangci.yml
+
+jobs:
+  golangci-lint:
+    name: golangci-lint
+    runs-on: ubuntu-latest
+    steps:
+      # 1단계: 코드 체크아웃
+      - name : Check out code into the Go module directory
+        uses: actions/checkout@v3
+
+      # 2단계: golangci-lint 실행
+      - name: golangci-lint
+        uses: reviewdog/action-golangci-lint@v2
+        with:
+          # GitHub Actions에서 자동으로 제공하는 토큰
+          github_token: '${{ secrets.GITHUB_TOKEN }}'
+
+          # golangci-lint 실행 옵션
+          golangci_lint_flags: "--config=./.golangci.yml ./..."
+          # --config: 설정 파일 위치 지정
+          # ./...: 현재 디렉토리와 모든 하위 디렉토리의 코드를 검사
+
+          # lint에서 에러가 발생하면 워크플로우를 실패 처리
+          fail_on_error: true
+
+          # 리뷰 결과를 GitHub PR에 코멘트로 남김
+          reporter: "github-pr-review"

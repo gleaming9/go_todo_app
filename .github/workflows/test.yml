@@ -1,0 +1,35 @@
+# 워크플로우 트리거 설정
+on:
+  # main 브랜치에 푸시할 때만 워크플로우가 실행되도록 설정
+    push:
+        branches:
+        - "main"
+    # 모든 브랜츠에서 PR이 생성되거나 업데이트 될 때 실행
+    pull_request:
+
+# GitHub Actions UI에서 표시될 워크플로우 이름
+name: test
+#실행할 작업들을 정의
+jobs:
+  test:
+    # Ubuntu 최신 버전을 실행 환경으로 사용
+    runs-on: ubuntu-latest
+
+    steps:
+    # Go 언어 설치 및 설정
+    - uses: actions/setup-go@v3
+      with:
+        go-version: '>=1.18'
+
+    # 레포지토리 코드 체크아웃
+    - uses: actions/checkout@v3 # 현재 레포지토리의 코드를 가져오는 액션
+
+    # Go 테스트 실행
+    - run: go test ./... -coverprofile=coverage.out
+      # ./... : 현재 디렉토리와 모든 하위 디렉토리의 테스트 실행
+      # -coverprofile=coverage.out : 테스트 결과를 coverage.out 파일에 저장
+
+    # 테스트 커버리지 리포트 생성
+    - name: report coverage
+      uses: k1LoW/octocov-action@v0 #octocov 액션 사용
+      # octocov는 테스트 커버리지를 분석하고 시각화된 리포트를 생성
