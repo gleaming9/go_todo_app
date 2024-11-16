@@ -26,7 +26,7 @@ func run(ctx context.Context) error {
 	s := NewServer(l, mux) // NewServer 함수를 사용하여 서버를 생성한다.
 	return s.Run(ctx)      // Run 메서드를 사용하여 서버를 실행한다.
 
-	// 이를 통해서 결합도를 낮춘다!
+	// 이를 통해서 결합도를 낮춘다
 }
 
 func main() {
