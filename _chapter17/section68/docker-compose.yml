@@ -1,0 +1,28 @@
+services:
+
+  # 'app'이라는 이름의 서비스(컨테이너)를 정의
+  app:
+    # 사용할 Docker 이미지 이름 : 'gotodo'
+    image: gotodo
+
+    build:
+      #빌드할 파일들이 있는 위치를 지정 : .. <- 한칸 위 폴더에 go.mod 위치
+      #go_todo_app 폴더를 컨텍스트로 설정
+      context: .
+      dockerfile: Dockerfile
+      # target=dev로 설정하여 Dockerfile의 dev stage를 빌드
+      args:
+        target: dev
+    environment: # 환경 변수 설정
+      TODO_ENV: dev
+      PORT: 8080
+
+    # 로컬 컴퓨터의 파일과 컨테이너 안의 파일을 연결, 코드 수정 시 바로 컨테이너에 반영
+    volumes:
+      - .:/app # go_todo_app 루트 디렉터리를 컨테이너의 /app에 마운트
+
+    # 컨테이너가 사용할 포트를 지정
+    ports:
+        # 웹 브라우저에서 localhost:18000으로 접속하면 컨테이너의 80번 포트로 연결
+        # 왼쪽은 내 컴퓨터의 포트, 오른쪽은 컨테이너 안의 포트
+        - "18000:8080"
