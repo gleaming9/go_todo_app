@@ -3,6 +3,7 @@ package store
 import (
 	"context"
 	"github.com/DATA-DOG/go-sqlmock"
+	_ "github.com/go-sql-driver/mysql" // MySQL 드라이버 임포트
 	"github.com/google/go-cmp/cmp"
 	"github.com/jmoiron/sqlx"
 	"go_todo_app/clock"
