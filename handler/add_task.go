@@ -10,7 +10,6 @@ import (
 )
 
 type AddTask struct {
-	// - Store, + DB, Repo
 	DB        *sqlx.DB
 	Repo      *store.Repository
 	Validator *validator.Validate
@@ -28,7 +27,7 @@ func (at *AddTask) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		// JSON 파싱 중 오류가 발생하면 500 상태 코드와 오류 메시지를 반환
 		RespondJSON(ctx, w, &ErrResponse{
 			Message: err.Error(),
-		}, http.StatusBadRequest)
+		}, http.StatusInternalServerError)
 		return
 	}
 	// Validator를 사용하여 Title 필드가 있는지 검증
@@ -41,19 +40,13 @@ func (at *AddTask) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Task 구조체를 생성하여, Title, Status, Created 필드를 설정
 	t := &entity.Task{
-		/*Title:   b.Title,    // 입력받은 Title을 설정
-		Status:  "todo",     // 초기 상태는 "todo"로 설정
-		Created: time.Now(), // 생성된 시간을 현재 시간으로 설정*/
-		Title:  b.Title,
-		Status: entity.TaskStatusTodo,
+		Title:  b.Title,               // 요청에서 받은 Title을 Task 구조체에 대입
+		Status: entity.TaskStatusTodo, // Task의 상태를 "todo"로 설정
 	}
-	//id, err := store.Tasks.Add(t)
 	err := at.Repo.AddTask(ctx, at.DB, t)
 
 	if err != nil {
-		// Task 추가 중 오류가 발생하면 500 상태 코드와 오류 메시지를 반환
 		RespondJSON(ctx, w, &ErrResponse{
 			Message: err.Error(),
 		}, http.StatusInternalServerError)
@@ -61,7 +54,7 @@ func (at *AddTask) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	// Task의 ID를 JSON 응답으로 반환
 	rsp := struct {
-		ID int `json:"id"` // JSON 응답에서 ID 필드의 이름을 "id"로 설정
-	}{ID: int(t.ID)} //ID: int(id)
+		ID entity.TaskID `json:"id"` // JSON 응답에서 ID 필드의 이름을 "id"로 설정
+	}{ID: t.ID}
 	RespondJSON(ctx, w, rsp, http.StatusOK)
 }

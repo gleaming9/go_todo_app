@@ -2,6 +2,7 @@ package store
 
 import (
 	"context"
+	_ "github.com/go-sql-driver/mysql" // 추가 해야 오류 안남
 	"go_todo_app/entity"
 )
 

@@ -26,6 +26,7 @@ func run(ctx context.Context) error {
 	// 오류가 반환돼도 cleanup 함수를 실행한다.
 	defer cleanup()
 	if err != nil {
+		return err
 	}
 
 	s := NewServer(l, mux)
