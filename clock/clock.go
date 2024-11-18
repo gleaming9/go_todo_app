@@ -6,9 +6,9 @@ type Clocker interface {
 	Now() time.Time
 }
 
-type RealClock struct{}
+type RealClocker struct{}
 
-func (r RealClock) Now() time.Time {
+func (r RealClocker) Now() time.Time {
 	return time.Now()
 }
 

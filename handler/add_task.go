@@ -3,14 +3,16 @@ package handler
 import (
 	"encoding/json"
 	"github.com/go-playground/validator"
+	"github.com/jmoiron/sqlx"
 	"go_todo_app/entity"
 	"go_todo_app/store"
 	"net/http"
-	"time"
 )
 
 type AddTask struct {
-	Store     *store.TaskStore
+	// - Store, + DB, Repo
+	DB        *sqlx.DB
+	Repo      *store.Repository
 	Validator *validator.Validate
 }
 
@@ -41,12 +43,15 @@ func (at *AddTask) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	// Task 구조체를 생성하여, Title, Status, Created 필드를 설정
 	t := &entity.Task{
-		Title:   b.Title,    // 입력받은 Title을 설정
+		/*Title:   b.Title,    // 입력받은 Title을 설정
 		Status:  "todo",     // 초기 상태는 "todo"로 설정
-		Created: time.Now(), // 생성된 시간을 현재 시간으로 설정
+		Created: time.Now(), // 생성된 시간을 현재 시간으로 설정*/
+		Title:  b.Title,
+		Status: entity.TaskStatusTodo,
 	}
-	// TaskStore에 Task를 추가하고 ID를 반환
-	id, err := store.Tasks.Add(t)
+	//id, err := store.Tasks.Add(t)
+	err := at.Repo.AddTask(ctx, at.DB, t)
+
 	if err != nil {
 		// Task 추가 중 오류가 발생하면 500 상태 코드와 오류 메시지를 반환
 		RespondJSON(ctx, w, &ErrResponse{
@@ -57,6 +62,6 @@ func (at *AddTask) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// Task의 ID를 JSON 응답으로 반환
 	rsp := struct {
 		ID int `json:"id"` // JSON 응답에서 ID 필드의 이름을 "id"로 설정
-	}{ID: int(id)}
+	}{ID: int(t.ID)} //ID: int(id)
 	RespondJSON(ctx, w, rsp, http.StatusOK)
 }

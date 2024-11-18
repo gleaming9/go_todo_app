@@ -22,11 +22,14 @@ func run(ctx context.Context) error {
 	url := fmt.Sprintf("http://%s", l.Addr().String())
 	log.Printf("start with: %v", url)
 
-	mux := NewMux()        // NewMux 함수를 사용하여 HTTP 핸들러를 생성한다.
-	s := NewServer(l, mux) // NewServer 함수를 사용하여 서버를 생성한다.
-	return s.Run(ctx)      // Run 메서드를 사용하여 서버를 실행한다.
+	mux, cleanup, err := NewMux(ctx, cfg)
+	// 오류가 반환돼도 cleanup 함수를 실행한다.
+	defer cleanup()
+	if err != nil {
+	}
 
-	// 이를 통해서 결합도를 낮춘다
+	s := NewServer(l, mux)
+	return s.Run(ctx)
 }
 
 func main() {

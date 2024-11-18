@@ -1,0 +1,43 @@
+root = '.'
+tmp_dir = 'tmp'
+
+[build]
+cmd = "go build -o ./tmp/main ." #Go 프로젝트를 빌드
+bin = "./tmp/main"                 #빌드된 실행 파일 경로
+#실행 파일 실행 시 필요한 환경 변수와 인자 설정 -> 80번 포트 사용하도록 인수 지정
+full_bin = "APP_ENV=dev APP_USER=air ./tmp/main 80"
+
+# 파일 변경 감지 설정 -> 변경을 감지할 파일 확장자
+include_ext = ["go", "tpl", "tmpl", "html"]
+# 감지하지 않을 디렉터리 목록
+exclude_dir = ["assets", "tmp", "vendor", "frontend/node_modules", "_tools", "cert", "testutil"]
+include_dir = []
+exclude_file = []
+exclude_regex = ["_test.go"]
+exclude_unchanged = true
+exclude_underscore = false
+follow_symlink = false
+
+#로깅 설정 : 로그파일 경로, 파일 변경 감지 후 재빌드 대기 시간
+log = "air.log"
+delay = 1000
+
+#오류 처리 설정
+stop_on_error = true
+send_interrupt = false
+kill_delay = 500
+
+[log]
+time = false
+
+[color]
+#로그 출력 시 사용할 색상 설정
+main = "magenta"
+watcher = "cyan"
+build = "yellow"
+runner = "green"
+
+#프로그램 종료 시 임시 디렉터리 삭제 여부
+[misc]
+clean_on_exit = true
+
