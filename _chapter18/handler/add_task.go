@@ -38,17 +38,15 @@ func (at *AddTask) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}, http.StatusBadRequest)
 		return
 	}
-
 	// Task 구조체를 생성하여, Title, Status, Created 필드를 설정
 	t := &entity.Task{
-		Title:   b.Title,    // 입력받은 Title을 설정
-		Status:  "todo",     // 초기 상태는 "todo"로 설정
-		Created: time.Now(), // 생성된 시간을 현재 시간으로 설정
+		Title:   b.Title,
+		Status:  "todo",
+		Created: time.Now(),
 	}
 	// TaskStore에 Task를 추가하고 ID를 반환
 	id, err := store.Tasks.Add(t)
 	if err != nil {
-		// Task 추가 중 오류가 발생하면 500 상태 코드와 오류 메시지를 반환
 		RespondJSON(ctx, w, &ErrResponse{
 			Message: err.Error(),
 		}, http.StatusInternalServerError)
@@ -56,7 +54,7 @@ func (at *AddTask) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	// Task의 ID를 JSON 응답으로 반환
 	rsp := struct {
-		ID int `json:"id"` // JSON 응답에서 ID 필드의 이름을 "id"로 설정
-	}{ID: int(id)}
+		ID entity.TaskID `json:"id"` // JSON 응답에서 ID 필드의 이름을 "id"로 설정
+	}{ID: id}
 	RespondJSON(ctx, w, rsp, http.StatusOK)
 }

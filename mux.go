@@ -12,7 +12,7 @@ import (
 	"go_todo_app/store"
 )
 
-// 인수값과 리턴값 둘다 변경
+// 파라미터와 리턴값 둘다 변경
 func NewMux(ctx context.Context, cfg *config.Config) (http.Handler, func(), error) {
 	mux := chi.NewRouter() // 새로운 라우터 인스턴스 생성
 
@@ -22,7 +22,6 @@ func NewMux(ctx context.Context, cfg *config.Config) (http.Handler, func(), erro
 		_, _ = w.Write([]byte(`{"status": "ok"}`)) // JSON 형식의 상태 응답을 반환
 	})
 	v := validator.New()
-	//이 이후로 변경
 	db, cleanup, err := store.New(ctx, cfg) // 데이터베이스 연결을 위한 New 함수 호출
 	if err != nil {
 		return nil, cleanup, err

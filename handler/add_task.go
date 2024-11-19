@@ -3,15 +3,12 @@ package handler
 import (
 	"encoding/json"
 	"github.com/go-playground/validator"
-	"github.com/jmoiron/sqlx"
 	"go_todo_app/entity"
-	"go_todo_app/store"
 	"net/http"
 )
 
 type AddTask struct {
-	DB        *sqlx.DB
-	Repo      *store.Repository
+	Service   AddTaskService
 	Validator *validator.Validate
 }
 
@@ -39,12 +36,7 @@ func (at *AddTask) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}, http.StatusBadRequest)
 		return
 	}
-
-	t := &entity.Task{
-		Title:  b.Title,               // 요청에서 받은 Title을 Task 구조체에 대입
-		Status: entity.TaskStatusTodo, // Task의 상태를 "todo"로 설정
-	}
-	err := at.Repo.AddTask(ctx, at.DB, t)
+	t, err := at.Service.AddTask(ctx, b.Title)
 
 	if err != nil {
 		RespondJSON(ctx, w, &ErrResponse{

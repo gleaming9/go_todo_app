@@ -8,7 +8,6 @@ import (
 
 // 모든 Task를 가져오는 핸들러
 type ListTask struct {
-	// Task를 저장하는 store
 	Store *store.TaskStore
 }
 

@@ -31,7 +31,6 @@ func (lt *ListTask) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}, http.StatusInternalServerError)
 		return
 	}
-
 	// Task를 JSON으로 변환
 	rsp := []task{}
 

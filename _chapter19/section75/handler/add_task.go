@@ -40,20 +40,13 @@ func (at *AddTask) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}, http.StatusBadRequest)
 		return
 	}
-
-	// Task 구조체를 생성하여, Title, Status, Created 필드를 설정
 	t := &entity.Task{
-		/*Title:   b.Title,    // 입력받은 Title을 설정
-		Status:  "todo",     // 초기 상태는 "todo"로 설정
-		Created: time.Now(), // 생성된 시간을 현재 시간으로 설정*/
 		Title:  b.Title,
 		Status: entity.TaskStatusTodo,
 	}
-	//id, err := store.Tasks.Add(t)
 	err := at.Repo.AddTask(ctx, at.DB, t)
 
 	if err != nil {
-		// Task 추가 중 오류가 발생하면 500 상태 코드와 오류 메시지를 반환
 		RespondJSON(ctx, w, &ErrResponse{
 			Message: err.Error(),
 		}, http.StatusInternalServerError)

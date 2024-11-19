@@ -2,9 +2,10 @@ package handler
 
 import (
 	"bytes"
+	"context"
+	"errors"
 	"github.com/go-playground/validator"
 	"go_todo_app/entity"
-	"go_todo_app/store"
 	"go_todo_app/testutil"
 	"net/http"
 	"net/http/httptest"
@@ -51,9 +52,22 @@ func TestAddTask(t *testing.T) {
 				bytes.NewReader(testutil.LoadFile(t, tt.reqFile)),
 			)
 
-			sut := AddTask{Store: &store.TaskStore{
-				Tasks: map[entity.TaskID]*entity.Task{}, // 빈 TaskStore를 사용하여 저장
-			}, Validator: validator.New()} // 입력 검증을 위한 validator 생성
+			// AddTaskServiceMock를 사용하여 mock 객체 생성
+			moq := &AddTaskServiceMock{}
+
+			// AddTaskFunc를 모의하여 테스트 케이스에 따라 동작 설정
+			moq.AddTaskFunc = func(ctx context.Context, title string) (*entity.Task, error) {
+				if tt.want.status == http.StatusOK {
+					return &entity.Task{ID: 1}, nil
+				}
+				return nil, errors.New("error from mock")
+			}
+
+			// AddTask 핸들러를 초기화하고 mock 객체와 Validator 설정
+			sut := AddTask{
+				Service:   moq,
+				Validator: validator.New(),
+			}
 			// AddTask 핸들러 실행
 			sut.ServeHTTP(w, r)
 

@@ -51,9 +51,11 @@ func TestAddTask(t *testing.T) {
 				bytes.NewReader(testutil.LoadFile(t, tt.reqFile)),
 			)
 
-			sut := AddTask{Store: &store.TaskStore{
-				Tasks: map[entity.TaskID]*entity.Task{}, // 빈 TaskStore를 사용하여 저장
-			}, Validator: validator.New()} // 입력 검증을 위한 validator 생성
+			sut := AddTask{
+				Store: &store.TaskStore{
+					Tasks: map[entity.TaskID]*entity.Task{}, // 빈 TaskStore를 사용하여 저장
+				}, Validator: validator.New()} // 입력 검증을 위한 validator 생성
+
 			// AddTask 핸들러 실행
 			sut.ServeHTTP(w, r)
 
