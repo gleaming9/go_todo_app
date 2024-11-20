@@ -1,16 +1,13 @@
 package handler
 
 import (
-	"github.com/jmoiron/sqlx"
 	"go_todo_app/entity"
-	"go_todo_app/store"
 	"net/http"
 )
 
 // 모든 Task를 가져오는 핸들러
 type ListTask struct {
-	DB   *sqlx.DB
-	Repo *store.Repository
+	Service ListTasksService
 }
 
 // task 구조체는 JSON 데이터 형식을 정의
@@ -24,7 +21,7 @@ func (lt *ListTask) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	//요청 컨텍스트를 가져옴
 	ctx := r.Context()
 
-	tasks, err := lt.Repo.ListTasks(ctx, lt.DB)
+	tasks, err := lt.Service.ListTasks(ctx)
 	if err != nil {
 		RespondJSON(ctx, w, &ErrResponse{
 			Message: err.Error(),
