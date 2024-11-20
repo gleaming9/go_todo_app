@@ -21,3 +21,9 @@ type TaskLister interface {
 	// 컨텍스트와 데이터베이스 Queryer를 인자로 받습니다.
 	ListTasks(ctx context.Context, db store.Queryer) (entity.Tasks, error)
 }
+
+// UserRegister 인터페이스는 사용자 등록 메서드를 정의합니다.
+type UserRegister interface {
+	// RegisterUser 주어진 사용자 정보를 데이터베이스에 등록합니다.
+	RegisterUser(ctx context.Context, db store.Execer, u *entity.User) error
+}

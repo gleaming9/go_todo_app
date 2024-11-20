@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	// ErrCodeMySQLDuplicateEntry はMySQL系のDUPLICATEエラーコード
+	// ErrCodeMySQLDuplicateEntry MySQL의 데이터 중복 오류 코드
 	// https://dev.mysql.com/doc/mysql-errors/8.0/en/server-error-reference.html
 	// Error number: 1062; Symbol: ER_DUP_ENTRY; SQLSTATE: 23000
 	ErrCodeMySQLDuplicateEntry = 1062

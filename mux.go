@@ -38,5 +38,12 @@ func NewMux(ctx context.Context, cfg *config.Config) (http.Handler, func(), erro
 	}
 	mux.Get("/tasks", lt.ServeHTTP) // /tasks 경로에 대한 GET 요청을 ListTask 핸들러로 라우팅
 
+	ru := &handler.RegisterUser{
+		Service:   &service.RegisterUser{DB: db, Repo: &r},
+		Validator: v,
+	}
+	// /register 경로에 대한 POST 요청을 RegisterUser 핸들러로 라우팅
+	mux.Post("/register", ru.ServeHTTP)
+
 	return mux, cleanup, nil
 }
