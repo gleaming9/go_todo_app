@@ -37,7 +37,6 @@ func (at *AddTask) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	t, err := at.Service.AddTask(ctx, b.Title)
-
 	if err != nil {
 		RespondJSON(ctx, w, &ErrResponse{
 			Message: err.Error(),

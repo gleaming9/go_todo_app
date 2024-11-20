@@ -56,7 +56,9 @@ func TestAddTask(t *testing.T) {
 			moq := &AddTaskServiceMock{}
 
 			// AddTaskFunc를 모의하여 테스트 케이스에 따라 동작 설정
-			moq.AddTaskFunc = func(ctx context.Context, title string) (*entity.Task, error) {
+			moq.AddTaskFunc = func(
+				ctx context.Context, title string,
+			) (*entity.Task, error) {
 				if tt.want.status == http.StatusOK {
 					return &entity.Task{ID: 1}, nil
 				}
