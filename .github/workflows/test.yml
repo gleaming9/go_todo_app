@@ -29,6 +29,15 @@ jobs:
           MYSQL_DATABASE: todo
           MYSQL_USER: todo
           MYSQL_PASSWORD: todo
+      redis:
+        image: redis
+        options: >-
+          --health-cmd "redis-cli ping" 
+          --health-interval 10s 
+          --health-timeout 5s 
+          --health-retries 5
+        ports:
+          - 6379:6379
     steps:
     # Go 언어 설치 및 설정
     - uses: actions/setup-go@v3

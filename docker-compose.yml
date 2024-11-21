@@ -16,11 +16,15 @@ services:
     environment: # 환경 변수 설정
       TODO_ENV: dev
       PORT: 8080
+      TODO_DB_DATABASE: todo
       TODO_DB_HOST: todo-db
       TODO_DB_PORT: 3306
       TODO_DB_USER: todo
       TODO_DB_PASSWORD: todo
       TODO_DB_NAME: todo
+      #redis 환경변수
+      TODO_REDIS_HOST: todo-redis
+      TODO_REDIS_PORT: 6379
 
     # 로컬 컴퓨터의 파일과 컨테이너 안의 파일을 연결, 코드 수정 시 바로 컨테이너에 반영
     volumes:
@@ -45,5 +49,15 @@ services:
       - ./_tools/mysql/conf.d:/etc/mysql/conf.d:cached
     ports:
         - "33306:3306"
+
+  # redis 서비스 추가
+  todo-redis:
+      image: "redis:latest"
+      container_name: todo-redis
+      ports:
+        - "36379:6379"
+      volumes:
+        - todo-redis-data:/data
 volumes:
     todo-db-data:
+    todo-redis-data:

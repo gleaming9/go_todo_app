@@ -12,6 +12,8 @@ type Config struct {
 	DBUser     string `env:"TODO_DB_USER" envDefault:"todo"`
 	DBPassword string `env:"TODO_DB_PASSWORD" envDefault:"todo"`
 	DBName     string `env:"TODO_DB_NAME" envDefault:"todo"`
+	RedisHost  string `env:"TODO_REDIS_HOST" envDefault:"127.0.0.1"`
+	RedisPort  int    `env:"TODO_REDIS_PORT" envDefault:"36379"`
 }
 
 // New 함수는 Config 구조체를 생성하고 환경 변수를 파싱하여 필드를 초기화
