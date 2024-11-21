@@ -20,21 +20,16 @@ func NewMux() http.Handler {
 
 	// 입력값 검증을 위한 validator 인스턴스 생성
 	v := validator.New()
-
-	// /tasks 경로에 POST 요청을 처리하기 위한 AddTask 핸들러 추가
+	// AddTask 핸들러를 /tasks 경로에 추가
 	mux.Handle("/tasks", &handler.AddTask{Store: store.Tasks, Validator: v})
-
 	// AddTask 핸들러 인스턴스를 생성하여 /tasks 경로에 POST 요청 처리
 	at := &handler.AddTask{Store: store.Tasks, Validator: v}
-
 	// /tasks 경로에 POST 요청을 처리하기 위한 AddTask 핸들러 추가
 	mux.Post("/tasks", at.ServeHTTP)
-
 	// ListTask 핸들러 인스턴스를 생성하여 /tasks 경로에 GET 요청 처리
 	lt := &handler.ListTask{Store: store.Tasks}
 	// /tasks 경로에 GET 요청이 들어오면 lt.ServeHTTP를 호출하여 모든 Task 목록을 반환
 	mux.Get("/tasks", lt.ServeHTTP)
-
 	// 설정이 완료된 라우터 반환
 	return mux
 }

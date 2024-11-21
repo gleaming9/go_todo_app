@@ -21,7 +21,7 @@ func NewMux() http.Handler {
 	// 입력값 검증을 위한 validator 인스턴스 생성
 	v := validator.New()
 
-	// /tasks 경로에 POST 요청을 처리하기 위한 AddTask 핸들러 추가
+	// AddTask 핸들러를 /tasks 경로에 추가
 	mux.Handle("/tasks", &handler.AddTask{Store: store.Tasks, Validator: v})
 
 	// AddTask 핸들러 인스턴스를 생성하여 /tasks 경로에 POST 요청 처리
