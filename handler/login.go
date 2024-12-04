@@ -3,7 +3,6 @@ package handler
 import (
 	"encoding/json"
 	"github.com/go-playground/validator"
-	"log"
 	"net/http"
 )
 
@@ -15,7 +14,6 @@ type Login struct {
 // 입출력 JSON 을 구성하는 역할만 수행
 
 func (l *Login) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	log.Println("Login ServeHTTP\n")
 	ctx := r.Context()
 	var body struct {
 		UserName string `json:"user_name" validate:"required"`
