@@ -5,7 +5,7 @@ import (
 	"go_todo_app/entity"
 )
 
-//go:generate go run github.com/matryer/moq -out moq_test.go . ListTasksService AddTaskService RegisterUserService
+//go:generate go run github.com/matryer/moq -out moq_test.go . ListTasksService AddTaskService RegisterUserService LoginService
 type ListTasksService interface {
 	// ListTasks는 컨텍스트를 사용하여 Task 목록을 반환합니다.
 	// 호출 시 entity.Tasks 타입의 모든 Task 목록과 오류를 반환할 수 있습니다.
@@ -22,4 +22,8 @@ type AddTaskService interface {
 type RegisterUserService interface {
 	// RegisterUser 주어진 이름(name), 비밀번호(password), 권한(role)을 사용하여 사용자를 등록합니다.
 	RegisterUser(ctx context.Context, name, password, role string) (*entity.User, error)
+}
+
+type LoginService interface {
+	Login(ctx context.Context, name, pw string) (string, error)
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"go_todo_app/auth"
 	"go_todo_app/service"
 	"net/http"
 
@@ -22,21 +23,44 @@ func NewMux(ctx context.Context, cfg *config.Config) (http.Handler, func(), erro
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		_, _ = w.Write([]byte(`{"status": "ok"}`)) // JSON 형식의 상태 응답을 반환
 	})
+
 	v := validator.New()
 	db, cleanup, err := store.New(ctx, cfg) // 데이터베이스 연결을 위한 New 함수 호출
 	if err != nil {
 		return nil, cleanup, err
 	}
+	clocker := clock.RealClocker{}
 	r := store.Repository{Clocker: clock.RealClocker{}}
+	rcli, err := store.NewKVS(ctx, cfg) // 키-값 저장소 연결을 위한 NewKVS 함수 호출
+	if err != nil {
+		return nil, cleanup, err
+	}
+	jwter, err := auth.NewJWTer(rcli, clocker) // JWTer 인스턴스 생성
+	if err != nil {
+		return nil, cleanup, err
+	}
+	l := &handler.Login{
+		Service: &service.Login{
+			DB:             db,
+			Repo:           &r,
+			TokenGenerator: jwter,
+		},
+		Validator: v,
+	}
+	mux.Post("/login", l.ServeHTTP)
+
+	// POST /tasks 요청을 처리하는 핸들러
 	at := &handler.AddTask{
 		Service:   &service.AddTask{DB: db, Repo: &r},
 		Validator: v,
 	}
-	mux.Post("/tasks", at.ServeHTTP) // /tasks 경로에 대한 POST 요청을 AddTask 핸들러로 라우팅
+	// GET /tasks 요청 처리하는 핸들러
 	lt := &handler.ListTask{
 		Service: &service.ListTask{DB: db, Repo: &r},
 	}
-	mux.Get("/tasks", lt.ServeHTTP) // /tasks 경로에 대한 GET 요청을 ListTask 핸들러로 라우팅
+	
+	mux.Post("/tasks", at.ServeHTTP)
+	mux.Get("/tasks", lt.ServeHTTP)
 
 	ru := &handler.RegisterUser{
 		Service:   &service.RegisterUser{DB: db, Repo: &r},
